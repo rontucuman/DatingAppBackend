@@ -29,6 +29,7 @@ namespace DatingApp.Api
       services.AddDbContext(_config);
       services.AddApplicationServices();
       services.AddDataAccessServices();
+      services.AddCors();
       services.AddControllers();
     }
 
@@ -43,7 +44,10 @@ namespace DatingApp.Api
       app.UseHttpsRedirection();
 
       app.UseRouting();
-
+      app.UseCors(policy =>
+      {
+        policy.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:4200");
+      });
       app.UseAuthorization();
 
       app.UseEndpoints(endpoints =>
