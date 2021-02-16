@@ -13,7 +13,11 @@ namespace DatingApp.Infrastructure.Persistence.Configurations
   {
     public void Configure(EntityTypeBuilder<User> builder)
     {
+      builder.HasKey(e => e.Id);
       builder.ToTable("User");
+      builder.Property(e => e.UserName)
+        .IsRequired()
+        .HasMaxLength(50);
     }
   }
 }
