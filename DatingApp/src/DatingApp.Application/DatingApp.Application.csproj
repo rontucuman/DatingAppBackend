@@ -8,4 +8,8 @@
     <ProjectReference Include="..\DatingApp.Domain\DatingApp.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="ServiceMappers\" />
+  </ItemGroup>
+
 </Project>

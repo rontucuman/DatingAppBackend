@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DatingApp.Infrastructure.DataAccess
 {
-  internal class BaseRepository<T> : IRepository<T> where T : BaseEntity
+  public class BaseRepository<T> : IRepository<T> where T : BaseEntity
   {
     private readonly DbSet<T> _entities;
 
@@ -18,6 +18,9 @@ namespace DatingApp.Infrastructure.DataAccess
       if (context == null) throw new ArgumentNullException(nameof(context));
       _entities = context.Set<T>();
     }
+
+    protected DbSet<T> Entities => _entities;
+
     public IEnumerable<T> GetAll()
     {
       return _entities.AsEnumerable();

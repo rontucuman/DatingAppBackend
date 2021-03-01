@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DatingApp.Infrastructure.Extensions;
+using FluentValidation.AspNetCore;
 
 namespace DatingApp.Api
 {
@@ -30,6 +31,10 @@ namespace DatingApp.Api
       services.AddApplicationServices();
       services.AddDataAccessServices();
       services.AddCors();
+      services.AddMvc().AddFluentValidation(configuration =>
+      {
+        configuration.RegisterValidatorsFromAssemblies(AppDomain.CurrentDomain.GetAssemblies().Where(x => !x.IsDynamic));
+      });
       services.AddControllers();
     }
 

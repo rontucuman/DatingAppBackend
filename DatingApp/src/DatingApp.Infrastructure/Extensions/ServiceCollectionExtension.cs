@@ -1,5 +1,6 @@
 ﻿using DatingApp.Application.Interfaces.DataAccess;
 using DatingApp.Application.Interfaces.Services;
+using DatingApp.Application.ServiceMappers;
 using DatingApp.Application.Services;
 using DatingApp.Infrastructure.DataAccess;
 using DatingApp.Infrastructure.Persistence;
@@ -24,6 +25,8 @@ namespace DatingApp.Infrastructure.Extensions
     public static IServiceCollection AddApplicationServices(this IServiceCollection services)
     {
       services.AddTransient<IUserService, UserService>();
+      services.AddTransient<IAccountService, AccountService>();
+      services.AddTransient<IUserServiceMapper, UserServiceMapper>();
 
       return services;
     }

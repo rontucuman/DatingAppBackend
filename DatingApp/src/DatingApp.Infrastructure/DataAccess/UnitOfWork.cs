@@ -8,7 +8,7 @@ namespace DatingApp.Infrastructure.DataAccess
   public class UnitOfWork : IUnitOfWork
   {
     private readonly DatingAppContext _context;
-    private IRepository<User> _userRepository;
+    private IUserRepository _userRepository;
 
     public UnitOfWork(DatingAppContext context)
     {
@@ -23,7 +23,7 @@ namespace DatingApp.Infrastructure.DataAccess
       }
     }
 
-    public IRepository<User> UserRepository => _userRepository ??= new BaseRepository<User>(_context);
+    public IUserRepository UserRepository => _userRepository ??= new UserRepository(_context);
 
     public void SaveChanges()
     {

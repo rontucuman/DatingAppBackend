@@ -6,7 +6,7 @@ namespace DatingApp.Application.Interfaces.DataAccess
 {
   public interface IUnitOfWork : IDisposable
   {
-    public IRepository<User> UserRepository { get; }
+    public IUserRepository UserRepository { get; }
 
     void SaveChanges();
     Task SaveChangesAsync();
