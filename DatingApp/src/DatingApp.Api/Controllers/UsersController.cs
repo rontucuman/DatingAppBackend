@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using DatingApp.Application.Interfaces.Services;
 using DatingApp.Domain.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DatingApp.Api.Controllers
@@ -16,6 +17,7 @@ namespace DatingApp.Api.Controllers
     }
 
     [HttpGet]
+    [AllowAnonymous]
     public async Task<IActionResult> GetUsersAsync()
     {
       IEnumerable<User> users = await _userService.GetUsersListAsync();
@@ -23,6 +25,7 @@ namespace DatingApp.Api.Controllers
     }
 
     [HttpGet("{id}")]
+    [Authorize]
     public async Task<IActionResult> GetUserByIdAsync(int id)
     {
       User user = await _userService.GetUserByIdAsync(id);

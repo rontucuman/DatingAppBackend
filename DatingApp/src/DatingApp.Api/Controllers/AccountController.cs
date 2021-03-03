@@ -23,9 +23,9 @@ namespace DatingApp.Api.Controllers
         return BadRequest($"UserName '{registerDto.UserName}' already exists.");
       }
 
-      await _accountService.RegisterUserAsync(registerDto);
+      UserDto userDto = await _accountService.RegisterUserAsync(registerDto);
 
-      return Ok();
+      return Ok(userDto);
     }
 
     [HttpPost("login")]

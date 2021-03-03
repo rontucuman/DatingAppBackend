@@ -9,9 +9,13 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
+using DatingApp.Application.Extensions;
 using DatingApp.Infrastructure.Extensions;
 using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 
 namespace DatingApp.Api
 {
@@ -29,12 +33,14 @@ namespace DatingApp.Api
     {
       services.AddDbContext(_config);
       services.AddApplicationServices();
+      services.AddInfrastructureServices();
       services.AddDataAccessServices();
       services.AddCors();
       services.AddMvc().AddFluentValidation(configuration =>
       {
         configuration.RegisterValidatorsFromAssemblies(AppDomain.CurrentDomain.GetAssemblies().Where(x => !x.IsDynamic));
       });
+      services.AddIdentityServices(_config);
       services.AddControllers();
     }
 
@@ -53,6 +59,7 @@ namespace DatingApp.Api
       {
         policy.AllowAnyHeader().AllowAnyMethod().WithOrigins("https://localhost:4200");
       });
+      app.UseAuthentication();
       app.UseAuthorization();
 
       app.UseEndpoints(endpoints =>

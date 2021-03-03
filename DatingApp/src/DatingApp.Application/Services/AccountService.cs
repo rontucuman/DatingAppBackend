@@ -1,4 +1,5 @@
-﻿using System.Security.Cryptography;
+﻿using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using DatingApp.Application.Dtos;
@@ -11,18 +12,20 @@ namespace DatingApp.Application.Services
   public class AccountService : IAccountService
   {
     private readonly IUserService _userService;
+    private readonly ITokenService _tokenService;
 
-    public AccountService(IUserService userService)
+    public AccountService(IUserService userService, ITokenService tokenService)
     {
       _userService = userService;
+      _tokenService = tokenService;
     }
-    
+
     public async Task<bool> UserNameExists(string userName)
     {
       return await _userService.UserNameExistsAsync(userName);
     }
 
-    public async Task RegisterUserAsync(RegisterDto registerDto)
+    public async Task<UserDto> RegisterUserAsync(RegisterDto registerDto)
     {
       User user = new User
       {
@@ -32,6 +35,12 @@ namespace DatingApp.Application.Services
       SetPasswordHash(registerDto.Password, user);
 
       await _userService.AddUserAsync(user);
+
+      UserDto userDto = _userService.MapToUserDto(user);
+
+      userDto.Token = _tokenService.CreateToken(userDto);
+
+      return userDto;
     }
 
     public async Task<UserDto> LoginUserAsync(LoginDto loginDto)
@@ -51,6 +60,7 @@ namespace DatingApp.Application.Services
       }
 
       UserDto userDto = _userService.MapToUserDto(user);
+      userDto.Token = _tokenService.CreateToken(userDto);
 
       return userDto;
     }
@@ -60,15 +70,9 @@ namespace DatingApp.Application.Services
       using HMACSHA512 hmac = new HMACSHA512(user.PasswordSalt);
       byte[] computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(loginDto.Password));
 
-      for (int i = 0; i < computedHash.Length; i++)
-      {
-        if (computedHash[i] != user.PasswordHash[i])
-        {
-          return false;
-        }
-      }
+      bool isEqual = computedHash.SequenceEqual(user.PasswordHash);
 
-      return true;
+      return isEqual;
     }
 
     private void SetPasswordHash(string password, User user)
